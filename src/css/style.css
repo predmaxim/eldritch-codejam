@@ -162,7 +162,7 @@ section {
   margin-top: 60px;
 }
 
-.deck {
+.card-map {
   display: flex;
   flex-direction: column;
 }
@@ -171,11 +171,11 @@ section {
   margin-top: 0;
 }
 
-.deck>div:not(:last-child) {
+.card-map>div:not(:last-child) {
   margin-bottom: 20px;
 }
 
-.deck p {
+.card-map p {
   text-align: center;
 }
 
@@ -216,7 +216,7 @@ section {
   background: rgba(250, 66, 66, 0.301);
 }
 
-.shirt-img {
+.deck-img {
   box-shadow: 0px 5px 50px -20px rgb(0 0 0);
   cursor: pointer;
   border-radius: 10px;
@@ -231,7 +231,7 @@ section {
   -o-transition: .4s;
 }
 
-.shirt-img:hover {
+.deck-img:hover {
   background: rgb(250 207 66 / 28%);
   box-shadow: 0 0 38px 0px rgb(250 207 66);
 }

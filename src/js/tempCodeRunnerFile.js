@@ -1,55 +1,126 @@
-
-    const AncientsData = [
+ import { brownCards, blueCards, greenCards } from "../data/mythicCards/index";
+    const CardsData = [
       {
-        id: 'azathoth',
-        name: 'azathoth',
-        firstStage: {
-          greenCards: 1,
-          blueCards: 1,
-          brownCards: 2,
-        },
-        secondStage: {
-          greenCards: 2,
-          blueCards: 1,
-          brownCards: 3,
-        },
-        thirdStage: {
-          greenCards: 2,
-          blueCards: 0,
-          brownCards: 4,
-        },
+        id: 'green1',
+        // cardFace: greenCardsAssets.green1,
+        difficulty: 'easy',
+        color: 'green'
       },
       {
-        id: 'cthulhu',
-        name: 'cthulhu',
-        firstStage: {
-          greenCards: 0,
-          blueCards: 2,
-          brownCards: 2,
-        },
-        secondStage: {
-          greenCards: 1,
-          blueCards: 0,
-          brownCards: 3,
-        },
-        thirdStage: {
-          greenCards: 3,
-          blueCards: 0,
-          brownCards: 4,
-        },
-      }
+        id: 'green2',
+        // cardFace: greenCardsAssets.green2,
+        difficulty: 'hard',
+        color: 'green'
+      },
+      {
+        id: 'green3',
+        // cardFace: greenCardsAssets.green3,
+        difficulty: 'hard',
+        color: 'green'
+      },
+      {
+        id: 'green4',
+        // cardFace: greenCardsAssets.green4,
+        difficulty: 'hard',
+        color: 'green'
+      },
+      {
+        id: 'green5',
+        // cardFace: greenCardsAssets.green5,
+        difficulty: 'hard',
+        color: 'green'
+      },
+      {
+        id: 'green6',
+        // cardFace: greenCardsAssets.green6,
+        difficulty: 'hard',
+        color: 'green'
+      },
+      {
+        id: 'green7',
+        // cardFace: greenCardsAssets.green7,
+        difficulty: 'normal',
+        color: 'green'
+      },
+      {
+        id: 'green8',
+        // cardFace: greenCardsAssets.green8,
+        difficulty: 'normal',
+        color: 'green'
+      },
+      {
+        id: 'green9',
+        // cardFace: greenCardsAssets.green9,
+        difficulty: 'normal',
+        color: 'green'
+      },
+      {
+        id: 'green10',
+        // cardFace: greenCardsAssets.green10,
+        difficulty: 'normal',
+        color: 'green'
+      },
+      {
+        id: 'green11',
+        // cardFace: greenCardsAssets.green11,
+        difficulty: 'normal',
+        color: 'green'
+      },
+      {
+        id: 'green12',
+        // cardFace: greenCardsAssets.green12,
+        difficulty: 'easy',
+        color: 'green'
+      },
+      {
+        id: 'green13',
+        // cardFace: greenCardsAssets.green13,
+        difficulty: 'normal',
+        color: 'green'
+      },
+      {
+        id: 'green14',
+        // cardFace: greenCardsAssets.green14,
+        difficulty: 'normal',
+        color: 'green'
+      },
+      {
+        id: 'green15',
+        // cardFace: greenCardsAssets.green15,
+        difficulty: 'normal',
+        color: 'green'
+      },
+      {
+        id: 'green16',
+        // cardFace: greenCardsAssets.green16,
+        difficulty: 'easy',
+        color: 'green'
+      },
+      {
+        id: 'green17',
+        // cardFace: greenCardsAssets.green17,
+        difficulty: 'easy',
+        color: 'green'
+      },
+      {
+        id: 'green18',
+        // cardFace: greenCardsAssets.green18,
+        difficulty: 'easy',
+        color: 'green'
+      },
     ]
 
-    ancient = 'cthulhu'
-
-    const getDataKey = (arr, val) => {
-      let res
-      arr.forEach((el, i) => {
-        for (const key in el) {
-          if (el[key] == val) res = el
+    // getSelectedObj()
+    // @return objects array
+    // @param arr - array contains objects when to find
+    // @param val - key value to find
+    const getObjData = (arr, val) => {
+      return arr.filter((obj) => {
+        for (const key in obj) {
+          if (obj.color == val) res = obj;
         }
       })
-      return res
     }
 
-    console.log(getDataKey(AncientsData, ancient).firstStage.blueCards)
+    const BrownCards = getObjData(brownCards, stage.name)
+    console.log(BrownCards)
