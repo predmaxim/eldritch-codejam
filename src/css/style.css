@@ -27,7 +27,6 @@ body {
   font-family: Roboto;
   background-size: cover;
   height: 100%;
-  /* overflow: hidden; */
 }
 
 h1,
@@ -47,7 +46,8 @@ h6 {
 }
 
 section {
-  height: 100vh;
+  min-height: 100vh;
+  height: 100%;
   transition: .4s;
   -webkit-transition: .4s;
   -moz-transition: .4s;
@@ -57,7 +57,8 @@ section {
 
 .container {
   padding: 20px 40px 40px 40px;
-  max-width: 1440px;
+  width: 100%;
+  max-width: 1360px;
   margin: 0 auto;
   transition: .4s;
   -webkit-transition: .4s;
@@ -71,13 +72,15 @@ section {
   flex-wrap: wrap;
   justify-content: center;
   margin: 0 auto;
+  margin-top: 60px;
 }
 
 .ancient-cards-container img {
+  cursor: pointer;
   box-shadow: 0px 5px 50px -20px rgb(0, 0, 0);
   max-width: 300px;
   margin-right: 20px;
-  margin-top: 20px;
+  margin-bottom: 20px;
   border-radius: 10px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
@@ -99,6 +102,7 @@ section {
 }
 
 .button {
+  cursor: pointer;
   padding: 15px 40px;
   font-size: 20px;
   background: transparent;
@@ -138,15 +142,16 @@ section {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-top: 60px;
 }
 
 .stage {
   text-align: center;
-  font-style: 40px;
-  margin-bottom: 10px;
-  padding: 10px 20px;
+  font-size: 20px;
+  margin-bottom: 20px;
+  padding: 20px 20px;
   border: 1px solid #fff;
-  max-width: 200px;
+  max-width: 250px;
   width: 100%;
 }
 
@@ -154,12 +159,16 @@ section {
   display: flex;
   justify-content: space-around;
   align-items: center;
-  margin-top: 50px;
+  margin-top: 60px;
 }
 
 .deck {
   display: flex;
   flex-direction: column;
+}
+
+.first-stage p {
+  margin-top: 0;
 }
 
 .deck>div:not(:last-child) {
@@ -177,7 +186,7 @@ section {
 }
 
 .dot {
-  padding: 18px 25px 14px 25px;
+  padding: 25px 32px;
   font-size: 25px;
   border-radius: 50%;
   -webkit-border-radius: 50%;
@@ -208,6 +217,8 @@ section {
 }
 
 .shirt-img {
+  box-shadow: 0px 5px 50px -20px rgb(0 0 0);
+  cursor: pointer;
   border-radius: 10px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
