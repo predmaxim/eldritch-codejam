@@ -211,7 +211,7 @@ section {
   background: #5260db;
 }
 
-.stage.active {
+.difficulty-level.active {
   box-shadow: 0px 5px 50px -10px rgb(250, 66, 66);
   background: rgba(250, 66, 66, 0.301);
 }

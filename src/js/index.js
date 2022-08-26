@@ -26,6 +26,9 @@ const thirdStageBlueCard = container.querySelector('.third-stage .dot-blue');
 
 const timeOut = 200;
 
+let cardsImgInDeck;
+let cardsInDeck;
+
 let greenCardsWithDifficulty; // массив объектов - все выбранные зеленые карты с определенной сложностью
 let brownCardsTWithDifficulty; // массив объектов - все выбранные коричневые карты с определенной сложностью
 let blueCardsWithDifficulty; // массив объектов - все выбранные синие карты с определенной сложностью
@@ -123,9 +126,9 @@ const getSelectedObj = (arr, val) => {
 
 
 /**
-* @function getSelectedObj
-* @param arr - array of objects when to find
-* @param dif - difficulty value to find
+* @function getCardsWithDifficulty
+* @param {array} arr - array of objects when to find
+* @param {string} dif - difficulty value to find
 * @return {array} - returns an array of objects of given difficulty
 * */
 const getCardsWithDifficulty = (arr, dif) => {
@@ -138,9 +141,7 @@ const getCardsWithDifficulty = (arr, dif) => {
 
 /** 
 * @function getRandomCards
-* @param {array} arr - array of card  
-* @param {number} min - minimum of range number  
-* @param {number} max - maximum of range number  
+* @param {array} arr - array of card
 * @param {string} dif - difficulty
 * @returns {array} - get random cards in range and return array of objects
 * */
@@ -237,8 +238,8 @@ document.addEventListener('click', (e) => {
   }
 
   // stage
-
   if (e.target.classList.contains('difficulty-level')) {
+    console.log(e.target.getAttribute('id'))
     allDifficulties.forEach((el) => el.classList.remove('active'));
     setTimeout(() => e.target.classList.toggle('active'), timeOut)
     rollDown();
@@ -247,9 +248,9 @@ document.addEventListener('click', (e) => {
     difficulty = getSelectedObj(Difficulties, selectedDifficulty);
 
 
-    let greenCardsWithDifficulty = getCardsWithDifficulty(greenCards, difficulty.id); // массив объектов - все выбранные зеленые карты с определенной сложностью
-    let brownCardsTWithDifficulty = getCardsWithDifficulty(brownCards, difficulty.id); // массив объектов - все выбранные коричневые карты с определенной сложностью
-    let blueCardsWithDifficulty = getCardsWithDifficulty(blueCards, difficulty.id); // массив объектов - все выбранные синие карты с определенной сложностью
+    greenCardsWithDifficulty = getCardsWithDifficulty(greenCards, difficulty.id); // массив объектов - все выбранные зеленые карты с определенной сложностью
+    brownCardsTWithDifficulty = getCardsWithDifficulty(brownCards, difficulty.id); // массив объектов - все выбранные коричневые карты с определенной сложностью
+    blueCardsWithDifficulty = getCardsWithDifficulty(blueCards, difficulty.id); // массив объектов - все выбранные синие карты с определенной сложностью
 
     // const getAllCardsAmount = (arr, color) => {
     //   const colors = { greenCards: 'green', brownCards: 'brown', blueCards: 'blue' };
@@ -271,7 +272,7 @@ document.addEventListener('click', (e) => {
     // зеленые карты
     if (greenCardsWithDifficulty.length < allStageGreenCardInDeckToNeed) {
 
-      const notEnoughCardsAmount = allStageGreenCardInDeckToNeed - greenCardsWithDifficulty.length // кол-во
+      let notEnoughCardsAmount = allStageGreenCardInDeckToNeed - greenCardsWithDifficulty.length // кол-во
 
       if (difficulty.id == 'easy') {
         let cardsToNeed = getRandomCards(greenCards, 'normal') // arr of obj
