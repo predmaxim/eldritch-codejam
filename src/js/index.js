@@ -55,7 +55,6 @@ let offset = 0; // сдвиг
  */
 const elementHeigt = (element) => element.offsetHeight;
 
-
 /**
  * @function random
  * @param {number} min
@@ -107,6 +106,7 @@ const rollUp = () => {
     container.style.transform = `translateY(${offset}px )`;
   }, timeOut)
 }
+
 /**
  * @function getSelectedObj
  * @param {array} arr - array contains objects when to find
@@ -122,8 +122,6 @@ const getSelectedObj = (arr, val) => {
   })
   return res;
 }
-
-
 
 /**
 * @function getCardsWithDifficulty
@@ -153,7 +151,6 @@ const getRandomCards = (arr, dif) => {
   })
 }
 
-
 /** 
  * @function setDeck
  * @param {object} ancient - object when to find number of cards
@@ -172,6 +169,14 @@ const setDeck = (ancient) => {
   thirdStageBrownCard.textContent = ancient.thirdStage.brownCards;
   thirdStageBlueCard.textContent = ancient.thirdStage.blueCards;
 }
+
+/** 
+ * @function putCardsInDeck
+ * @param {array} el - array of objects to send
+ * @param {array} arr - storage array
+ * @return {*} - keeps the deck
+ */
+const putCardsInDeck = (el, arr) => el.forEach((e) => arr.push(e));
 
 document.addEventListener('click', (e) => {
 
@@ -196,6 +201,8 @@ document.addEventListener('click', (e) => {
     ancient = getSelectedObj(AncientsData, selectedAncient)
 
     setDeck(ancient); // установил колоду
+
+    cardsInDeck = []; // обнуляем колоду
 
     // кол-во карт первой стадии
     firstStageAllCardInDeck =
@@ -252,6 +259,13 @@ document.addEventListener('click', (e) => {
     brownCardsTWithDifficulty = getCardsWithDifficulty(brownCards, difficulty.id); // массив объектов - все выбранные коричневые карты с определенной сложностью
     blueCardsWithDifficulty = getCardsWithDifficulty(blueCards, difficulty.id); // массив объектов - все выбранные синие карты с определенной сложностью
 
+    // greenCardsWithDifficulty.forEach((e) => cardsInDeck.push(e));
+    
+    cardsInDeck = [];
+
+    putCardsInDeck(greenCardsWithDifficulty, cardsInDeck)
+    console.log(cardsInDeck)
+
     // const getAllCardsAmount = (arr, color) => {
     //   const colors = { greenCards: 'green', brownCards: 'brown', blueCards: 'blue' };
     //   let c;
@@ -272,25 +286,24 @@ document.addEventListener('click', (e) => {
     // зеленые карты
     if (greenCardsWithDifficulty.length < allStageGreenCardInDeckToNeed) {
 
+
       let notEnoughCardsAmount = allStageGreenCardInDeckToNeed - greenCardsWithDifficulty.length // кол-во
 
       if (difficulty.id == 'easy') {
         let cardsToNeed = getRandomCards(greenCards, 'normal') // arr of obj
-        cardsInDeck.push(cardsToNeed)+
+
+        putCardsInDeck(cardsToNeed, cardsInDeck)
         console.log(cardsInDeck)
       }
 
       if (difficulty.id == 'normal') {
         let cardsToNeed = getRandomCards(greenCards, 'easy') // arr of obj
-        cardsInDeck.push(cardsToNeed)
-        console.log(cardsInDeck)
+        // cardsInDeck.push(cardsInDeck);
       }
 
       if (difficulty.id == 'hard') {
-        // Высокий : убираются карты со снежинками
         let cardsToNeed = getRandomCards(greenCards, 'normal') // arr of obj
-        cardsInDeck.push(cardsToNeed)
-        console.log(cardsInDeck)
+        // cardsInDeck.push(cardsInDeck);
       }
     }
 
