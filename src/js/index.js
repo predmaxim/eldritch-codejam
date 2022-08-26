@@ -26,8 +26,8 @@ const thirdStageBlueCard = container.querySelector('.third-stage .dot-blue');
 
 const timeOut = 200;
 
-let cardsImgInDeck;
-let cardsInDeck;
+let cardsImgInDeck; // array of images cards in deck
+let cardsInDeck = []; // array of objects cards in deck
 
 let greenCardsWithDifficulty; // массив объектов - все выбранные зеленые карты с определенной сложностью
 let brownCardsTWithDifficulty; // массив объектов - все выбранные коричневые карты с определенной сложностью
@@ -276,19 +276,21 @@ document.addEventListener('click', (e) => {
 
       if (difficulty.id == 'easy') {
         let cardsToNeed = getRandomCards(greenCards, 'normal') // arr of obj
-        console.log(cardsToNeed)
+        cardsInDeck.push(cardsToNeed)+
+        console.log(cardsInDeck)
       }
 
       if (difficulty.id == 'normal') {
         let cardsToNeed = getRandomCards(greenCards, 'easy') // arr of obj
-        console.log(cardsToNeed)
-
+        cardsInDeck.push(cardsToNeed)
+        console.log(cardsInDeck)
       }
 
       if (difficulty.id == 'hard') {
         // Высокий : убираются карты со снежинками
         let cardsToNeed = getRandomCards(greenCards, 'normal') // arr of obj
-        console.log(cardsToNeed)
+        cardsInDeck.push(cardsToNeed)
+        console.log(cardsInDeck)
       }
     }
 
