@@ -6,7 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const devServer = (isDev) => !isDev ? {} : {
   devServer: {
-    open: true,
+    open: false,
     hot: true,
     port: 8080,
     // contentBase: path.join(__dirname, 'public'),

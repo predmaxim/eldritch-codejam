@@ -56,18 +56,6 @@ let offset = 0; // сдвиг
 const elementHeigt = (element) => element.offsetHeight;
 
 /**
- * @function random
- * @param {number} min
- * @param {number} max
- * @return {number} - returns element heigt
- */
-const random = (min, max) => {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-/**
  * @function rollDown
  * @return {*} - scroll to next screen slide and set
  * buttonUp and buttonDown visible or hidden
@@ -156,6 +144,22 @@ const setDeck = (ancient) => {
   thirdStageBlueCard.textContent = ancient.thirdStage.blueCards;
 }
 
+/**
+ * @function random
+ * @param {number} max - max in range
+ * @param {number} amount - number of digits to return
+ * @return {array} - returns array of unique digits
+ */
+const random = (max, amount) => {
+  let min = 0;
+  let countR = [];
+  for (let i = 0; i < amount; i++) {
+    let r = Math.floor(Math.random() * (max - min + 1)) + min;
+    !countR.includes(r) ? countR.push(r) : a++;
+  }
+  return countR;
+};
+
 /** 
 * @function getRandomCards
 * @param {array} arr - array of card
@@ -164,14 +168,10 @@ const setDeck = (ancient) => {
 * @returns {array} - get random cards in range and return array of objects
 * */
 const getRandomCards = (arr, dif, mis) => {
-  const arrayOfCards = getCardsWithDifficulty(arr, dif);
-  return arrayOfCards.filter((obj, idx) => {
-    for (let i = 0; i < mis; i++) {
-      let r = random(0, arrayOfCards.length - 1);
-      if (idx == r) return obj;
-    }
-
-  })
+  const сardsWithDifficulty = getCardsWithDifficulty(arr, dif);
+  return random(сardsWithDifficulty.length, mis).reduce((acc, el) => {
+    return сardsWithDifficulty.filter((obj, i) => {if (el == i) return obj})
+  }, [])
 }
 
 /** 
@@ -232,7 +232,7 @@ document.addEventListener('click', (e) => {
       ancient.firstStage.greenCards +
       ancient.secondStage.greenCards +
       ancient.thirdStage.greenCards;
-
+    console.log('allStageGreenCardInDeckToNeed', allStageGreenCardInDeckToNeed)
     // кол-во коричневых карт
     allStageBrownCardInDecToNeed =
       ancient.firstStage.brownCards +
@@ -291,24 +291,24 @@ document.addEventListener('click', (e) => {
     if (greenCardsWithDifficulty.length < allStageGreenCardInDeckToNeed) {
 
 
-      let missingCardsAmount = allStageGreenCardInDeckToNeed - greenCardsWithDifficulty.length // кол-во
-      console.log(missingCardsAmount)
+      let missingCardsAmount = allStageGreenCardInDeckToNeed - greenCardsWithDifficulty.length; // кол-во
+
+      console.log('missingCardsAmount', missingCardsAmount);
+
       if (difficulty.id == 'easy') {
-        let cardsToNeed = getRandomCards(greenCards, 'normal', missingCardsAmount) // arr of obj
-        putCardsInDeck(cardsToNeed, cardsInDeck)
-        console.log('cardsInDeck', cardsInDeck)
+        let cardsToNeed = getRandomCards(greenCards, 'normal', missingCardsAmount); // arr of obj
+        console.log('cardsToNeed', cardsToNeed);
+
+        putCardsInDeck(cardsToNeed, cardsInDeck);
+        console.log('cardsInDeck with missing cards', cardsInDeck);
       }
 
       if (difficulty.id == 'normal') {
-        let cardsToNeed = getRandomCards(greenCards, 'easy', missingCardsAmount) // arr of obj
-        putCardsInDeck(cardsToNeed, cardsInDeck)
-        console.log(cardsInDeck)
+        let cardsToNeed = getRandomCards(greenCards, 'easy', missingCardsAmount); // arr of obj
       }
 
       if (difficulty.id == 'hard') {
-        let cardsToNeed = getRandomCards(greenCards, 'normal', missingCardsAmount) // arr of obj
-        putCardsInDeck(cardsToNeed, cardsInDeck)
-        console.log(cardsInDeck)
+        let cardsToNeed = getRandomCards(greenCards, 'normal', missingCardsAmount); // arr of obj
       }
     }
 
