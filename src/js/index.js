@@ -10,7 +10,7 @@ const container = document.querySelector('.container');
 
 const ancientCards = container.querySelectorAll('.ancient-card');
 const sectionElements = container.querySelectorAll('section');
-const allStages = container.querySelectorAll('.stage');
+const allDifficulties = container.querySelectorAll('.difficulty-level');
 
 const firstStageGreenCard = container.querySelector('.first-stage .dot-green');
 const firstStageBrownCard = container.querySelector('.first-stage .dot-brown');
@@ -25,22 +25,51 @@ const thirdStageBrownCard = container.querySelector('.third-stage .dot-brown');
 const thirdStageBlueCard = container.querySelector('.third-stage .dot-blue');
 
 const timeOut = 200;
-let selectedAncient;
-let ancient;
-let selectedStage;
-let stage;
-let count = 0;
-let offset = 0;
 
-// elementHeigt()
-// @descripion    - returns element heigt
-// @return        - number
-// @param arr     - DOM element
-const elementHeigt = (el) => el.offsetHeight;
+let greenCardsWithDifficulty; // массив объектов - все выбранные зеленые карты с определенной сложностью
+let brownCardsTWithDifficulty; // массив объектов - все выбранные коричневые карты с определенной сложностью
+let blueCardsWithDifficulty; // массив объектов - все выбранные синие карты с определенной сложностью
 
-// rollDown()
-// @descripion    - scroll to next screen slide and set 
-// buttonUp and buttonDown visible or hidden
+let firstStageAllCardInDeck;// число - кол-во карт первой стадии
+let secondStagAllCardInDeck;// число - кол-во карт второй стадии
+let thirdStageAllCardInDeck;// число - кол-во карт третьей стадии
+
+let allStageGreenCardInDeckToNeed;// число - кол-во зеленых карт
+let allStageBrownCardInDecToNeed;// число - кол-во коричневых карт
+let allStageBlueCardInDeckToNeed;// число - кол-во голубых карт
+
+let selectedAncient; // DOM элемент - выбранный древний
+let ancient; // строка - данный древний
+let selectedDifficulty; // DOM элемент - выбранная сложность
+let difficulty; // строка - данная сложность
+let count = 0; // счетчик слойдера (секций)
+let offset = 0; // сдвиг
+
+/**
+ * @function lementHeigt
+ * @param {DOM element} element  
+ * @return {number} - returns element heigt   
+ */
+const elementHeigt = (element) => element.offsetHeight;
+
+
+/**
+ * @function random
+ * @param {number} min
+ * @param {number} max
+ * @return {number} - returns element heigt
+ */
+const random = (min, max) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+/**
+ * @function rollDown
+ * @return {*} - scroll to next screen slide and set
+ * buttonUp and buttonDown visible or hidden
+ */
 const rollDown = () => {
   count += 1;
   offset = count * elementHeigt(sectionElements[count - 1]);
@@ -56,9 +85,11 @@ const rollDown = () => {
   }, timeOut)
 }
 
-// rollUp()
-// @descripion    - scroll to previous screen slide and set  
-// buttonUp and buttonDown visible or hidden
+/**
+ * @function rollUp
+ * @return {*} - scroll to previous screen slide and set
+ * buttonUp and buttonDown visible or hidden
+ */
 const rollUp = () => {
   count -= 1;
   offset = -count * elementHeigt(sectionElements[count]);
@@ -73,11 +104,12 @@ const rollUp = () => {
     container.style.transform = `translateY(${offset}px )`;
   }, timeOut)
 }
-
-// getSelectedObj()
-// @return one object
-// @param arr - array contains objects when to find
-// @param val - selected value to find
+/**
+ * @function getSelectedObj
+ * @param {array} arr - array contains objects when to find
+ * @param {string} val - value of selected DOM element
+ * @return {array} - get selected object
+ */
 const getSelectedObj = (arr, val) => {
   let res;
   arr.forEach((obj) => {
@@ -88,24 +120,44 @@ const getSelectedObj = (arr, val) => {
   return res;
 }
 
-// getSelectedObj()
-// @descripion    - returns an array of objects of given difficulty
-// @return        - array of objects of given difficulty
-// @param arr     - array of objects when to find
-// @param stage   - stage value to find
-const getCardsWithDifficulty = (arr, stage) => {
+
+
+/**
+* @function getSelectedObj
+* @param arr - array of objects when to find
+* @param dif - difficulty value to find
+* @return {array} - returns an array of objects of given difficulty
+* */
+const getCardsWithDifficulty = (arr, dif) => {
   return arr.filter((obj) => {
     for (const key in obj) {
-      if (Object.hasOwnProperty.call(obj, key)) {
-        return obj.difficulty == stage;
-      }
+      return obj.difficulty == dif;
     }
   })
 }
 
-// setDeck()
-// @descripion    - set deck map
-// @param ancient - object when to find number of cards
+/** 
+* @function getRandomCards
+* @param {array} arr - array of card  
+* @param {number} min - minimum of range number  
+* @param {number} max - maximum of range number  
+* @param {string} dif - difficulty
+* @returns {array} - get random cards in range and return array of objects
+* */
+const getRandomCards = (arr, dif) => {
+  const arrayOfCards = getCardsWithDifficulty(arr, dif);
+  let r = random(0, arrayOfCards.length - 1);
+  return arrayOfCards.filter((obj, i) => {
+    if (i == r) return obj;
+  })
+}
+
+
+/** 
+ * @function setDeck
+ * @param {object} ancient - object when to find number of cards
+ * @return {*} - set deck map
+ */
 const setDeck = (ancient) => {
   firstStageGreenCard.textContent = ancient.firstStage.greenCards;
   firstStageBrownCard.textContent = ancient.firstStage.brownCards;
@@ -142,82 +194,108 @@ document.addEventListener('click', (e) => {
 
     ancient = getSelectedObj(AncientsData, selectedAncient)
 
-    setDeck(ancient)
+    setDeck(ancient); // установил колоду
+
+    // кол-во карт первой стадии
+    firstStageAllCardInDeck =
+      ancient.firstStage.greenCards +
+      ancient.firstStage.brownCards +
+      ancient.firstStage.blueCards;
+
+    // кол-во карт второй стадии
+    secondStagAllCardInDeck =
+      ancient.secondStage.greenCards +
+      ancient.secondStage.brownCards +
+      ancient.secondStage.blueCards;
+
+    // кол-во карт третьей стадии
+    thirdStageAllCardInDeck =
+      ancient.thirdStage.greenCards +
+      ancient.thirdStage.brownCards +
+      ancient.thirdStage.blueCards;
+
+
+    // кол-во зеленых карт
+    allStageGreenCardInDeckToNeed =
+      ancient.firstStage.greenCards +
+      ancient.secondStage.greenCards +
+      ancient.thirdStage.greenCards;
+
+    // кол-во коричневых карт
+    allStageBrownCardInDecToNeed =
+      ancient.firstStage.brownCards +
+      ancient.secondStage.brownCards +
+      ancient.thirdStage.brownCards;
+
+    // кол-во голубых карт
+    allStageBlueCardInDeckToNeed =
+      ancient.firstStage.blueCards +
+      ancient.secondStage.blueCards +
+      ancient.thirdStage.blueCards;
+
+
   }
 
   // stage
-  if (e.target.classList.contains('stage')) {
-    allStages.forEach((el) => el.classList.remove('active'));
+
+  if (e.target.classList.contains('difficulty-level')) {
+    allDifficulties.forEach((el) => el.classList.remove('active'));
     setTimeout(() => e.target.classList.toggle('active'), timeOut)
     rollDown();
 
-    selectedStage = e.target.getAttribute('id');
-    stage = getSelectedObj(Difficulties, selectedStage);
+    selectedDifficulty = e.target.getAttribute('id');
+    difficulty = getSelectedObj(Difficulties, selectedDifficulty);
 
 
+    let greenCardsWithDifficulty = getCardsWithDifficulty(greenCards, difficulty.id); // массив объектов - все выбранные зеленые карты с определенной сложностью
+    let brownCardsTWithDifficulty = getCardsWithDifficulty(brownCards, difficulty.id); // массив объектов - все выбранные коричневые карты с определенной сложностью
+    let blueCardsWithDifficulty = getCardsWithDifficulty(blueCards, difficulty.id); // массив объектов - все выбранные синие карты с определенной сложностью
 
+    // const getAllCardsAmount = (arr, color) => {
+    //   const colors = { greenCards: 'green', brownCards: 'brown', blueCards: 'blue' };
+    //   let c;
 
+    //   for (const key in colors) {
+    //     if (colors[key] == color) c = key;
+    //   }
 
+    //   return arr.reduce((acc, cur) => {
+    //     for (const key in cur) {
+    //       return cur.firstStage[c] + cur.secondStage[c] + cur.thirdStage[c];
+    //     }
+    //   }, 0)
+    // }
 
+    // ! правила добора недостающих карт
 
+    // зеленые карты
+    if (greenCardsWithDifficulty.length < allStageGreenCardInDeckToNeed) {
 
+      const notEnoughCardsAmount = allStageGreenCardInDeckToNeed - greenCardsWithDifficulty.length // кол-во
 
+      if (difficulty.id == 'easy') {
+        let cardsToNeed = getRandomCards(greenCards, 'normal') // arr of obj
+        console.log(cardsToNeed)
+      }
 
-    const GreenCards = getCardsWithDifficulty(greenCards, stage.id);
-    const BrownCards = getCardsWithDifficulty(brownCards, stage.id);
-    const BlueCards = getCardsWithDifficulty(blueCards, stage.id);
+      if (difficulty.id == 'normal') {
+        let cardsToNeed = getRandomCards(greenCards, 'easy') // arr of obj
+        console.log(cardsToNeed)
 
-    console.log(stage.id)
-    console.log('green', GreenCards)
-    console.log('brown', BrownCards)
-    console.log('blue', BlueCards)
+      }
 
-    // TODO 
-    // подбор карт исходя из сложности
-
-    // Легкий  : убираются карты с щупальцами
-    // Средний  : остается нетронутым
-    // Высокий  : убираются карты со снежинками
-
-    // brownCards - array objects with brown cards objects
-    // blueCards - array objects with blue cards objects
-    // greenCards - array objects with green cards objects
-
-    /*
-    fields:
-    
-    id: 'green1',
-    ardFace: greenCardsAssets.green1,
-    difficulty: 'easy',
-    color:'green'
-    */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+      if (difficulty.id == 'hard') {
+        // Высокий : убираются карты со снежинками
+        let cardsToNeed = getRandomCards(greenCards, 'normal') // arr of obj
+        console.log(cardsToNeed)
+      }
+    }
 
 
 
   }
+
+
   // deck-img
   if (e.target.classList.contains('deck-img')) {
     console.log('deck-img')
