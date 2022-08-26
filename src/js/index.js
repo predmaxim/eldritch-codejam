@@ -138,20 +138,6 @@ const getCardsWithDifficulty = (arr, dif) => {
 }
 
 /** 
-* @function getRandomCards
-* @param {array} arr - array of card
-* @param {string} dif - difficulty
-* @returns {array} - get random cards in range and return array of objects
-* */
-const getRandomCards = (arr, dif) => {
-  const arrayOfCards = getCardsWithDifficulty(arr, dif);
-  let r = random(0, arrayOfCards.length - 1);
-  return arrayOfCards.filter((obj, i) => {
-    if (i == r) return obj;
-  })
-}
-
-/** 
  * @function setDeck
  * @param {object} ancient - object when to find number of cards
  * @return {*} - set deck map
@@ -168,6 +154,24 @@ const setDeck = (ancient) => {
   thirdStageGreenCard.textContent = ancient.thirdStage.greenCards;
   thirdStageBrownCard.textContent = ancient.thirdStage.brownCards;
   thirdStageBlueCard.textContent = ancient.thirdStage.blueCards;
+}
+
+/** 
+* @function getRandomCards
+* @param {array} arr - array of card
+* @param {string} dif - difficulty
+* @param {number} mis - number of missing cards
+* @returns {array} - get random cards in range and return array of objects
+* */
+const getRandomCards = (arr, dif, mis) => {
+  const arrayOfCards = getCardsWithDifficulty(arr, dif);
+  return arrayOfCards.filter((obj, idx) => {
+    for (let i = 0; i < mis; i++) {
+      let r = random(0, arrayOfCards.length - 1);
+      if (idx == r) return obj;
+    }
+
+  })
 }
 
 /** 
@@ -259,12 +263,12 @@ document.addEventListener('click', (e) => {
     brownCardsTWithDifficulty = getCardsWithDifficulty(brownCards, difficulty.id); // массив объектов - все выбранные коричневые карты с определенной сложностью
     blueCardsWithDifficulty = getCardsWithDifficulty(blueCards, difficulty.id); // массив объектов - все выбранные синие карты с определенной сложностью
 
-    // greenCardsWithDifficulty.forEach((e) => cardsInDeck.push(e));
-    
     cardsInDeck = [];
 
-    putCardsInDeck(greenCardsWithDifficulty, cardsInDeck)
-    console.log(cardsInDeck)
+    putCardsInDeck(greenCardsWithDifficulty, cardsInDeck);
+    putCardsInDeck(brownCardsTWithDifficulty, cardsInDeck);
+    putCardsInDeck(blueCardsWithDifficulty, cardsInDeck);
+    console.log('cardsInDeck', cardsInDeck)
 
     // const getAllCardsAmount = (arr, color) => {
     //   const colors = { greenCards: 'green', brownCards: 'brown', blueCards: 'blue' };
@@ -287,26 +291,28 @@ document.addEventListener('click', (e) => {
     if (greenCardsWithDifficulty.length < allStageGreenCardInDeckToNeed) {
 
 
-      let notEnoughCardsAmount = allStageGreenCardInDeckToNeed - greenCardsWithDifficulty.length // кол-во
-
+      let missingCardsAmount = allStageGreenCardInDeckToNeed - greenCardsWithDifficulty.length // кол-во
+      console.log(missingCardsAmount)
       if (difficulty.id == 'easy') {
-        let cardsToNeed = getRandomCards(greenCards, 'normal') // arr of obj
+        let cardsToNeed = getRandomCards(greenCards, 'normal', missingCardsAmount) // arr of obj
+        putCardsInDeck(cardsToNeed, cardsInDeck)
+        console.log('cardsInDeck', cardsInDeck)
+      }
 
+      if (difficulty.id == 'normal') {
+        let cardsToNeed = getRandomCards(greenCards, 'easy', missingCardsAmount) // arr of obj
         putCardsInDeck(cardsToNeed, cardsInDeck)
         console.log(cardsInDeck)
       }
 
-      if (difficulty.id == 'normal') {
-        let cardsToNeed = getRandomCards(greenCards, 'easy') // arr of obj
-        // cardsInDeck.push(cardsInDeck);
-      }
-
       if (difficulty.id == 'hard') {
-        let cardsToNeed = getRandomCards(greenCards, 'normal') // arr of obj
-        // cardsInDeck.push(cardsInDeck);
+        let cardsToNeed = getRandomCards(greenCards, 'normal', missingCardsAmount) // arr of obj
+        putCardsInDeck(cardsToNeed, cardsInDeck)
+        console.log(cardsInDeck)
       }
     }
 
+    // const 
 
 
   }
