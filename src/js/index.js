@@ -551,55 +551,104 @@ document.addEventListener('click', (e) => {
   // deck-img
   if (e.target.classList.contains('deck-img')) {
 
-    if (allCardsInFirstStage.length - 1 > 0) {
+    if (allCardsInFirstStage.length > 0) {
 
       let removed = arrSlice(allCardsInFirstStage, 1)
 
       allCardsInFirstStage = getObjects(allCardsInFirstStage, 'id', (removed[0].id))
       e.target.setAttribute('src', removed[0].cardFace);
 
-      console.log(allCardsInFirstStage)
+      if ((removed[0].id).includes('green')) {
+        if (firstStageGreenCard.innerText != 0) {
+          firstStageGreenCard.innerText = firstStageGreenCard.innerText - 1 || 0;
+        }
+      }
+      if ((removed[0].id).includes('brown')) {
+        if (firstStageBrownCard.textContent != 0) {
+          firstStageBrownCard.innerText = firstStageBrownCard.innerText - 1 || 0;
+        }
+      }
+      if ((removed[0].id).includes('blue')) {
+        if (firstStageBlueCard.innerText != 0) {
+          firstStageBlueCard.innerText = firstStageBlueCard.innerText - 1 || 0;
+        }
+      }
 
-
-      // if (removed[0].id == /^green/) {
-      //   firstStageGreenCard.textContent = firstStageGreenCard.textConten - 1
-      // }
+      if (allCardsInFirstStage.length == 0) {
+        fs.style.textShadow = '0px 0px 35px red';
+        fs.style.color = '#ff6d6d';
+      }
+      // console.log('removed', removed[0].id)
+      // console.log(allCardsInFirstStage)
 
 
 
       // firstStageDots
-    } else if (allCardsInSecondStage.length - 1 > 0) {
-      fs.style.textShadow = '0px 0px 35px red';
-      fs.style.color = '#ff6d6d';
+    } else if (allCardsInSecondStage.length > 0) {
+
 
       let removed = arrSlice(allCardsInSecondStage, 1)
 
       allCardsInSecondStage = getObjects(allCardsInSecondStage, 'id', (removed[0].id))
       e.target.setAttribute('src', removed[0].cardFace);
 
+      if ((removed[0].id).includes('green')) {
+        if (secondStageGreenCard.innerText != 0) {
+          secondStageGreenCard.innerText = secondStageGreenCard.innerText - 1 || 0;
+        }
+      }
+      if ((removed[0].id).includes('brown')) {
+        if (secondStageBrownCard.textContent != 0) {
+          secondStageBrownCard.innerText = secondStageBrownCard.innerText - 1 || 0;
+        }
+      }
+      if ((removed[0].id).includes('blue')) {
+        if (secondStageBlueCard.innerText != 0) {
+          secondStageBlueCard.innerText = secondStageBlueCard.innerText - 1 || 0;
+        }
+      }
+      if (allCardsInSecondStage.length == 0) {
+        ss.style.textShadow = '0px 0px 35px red';
+        ss.style.color = '#ff6d6d';
+      }
+      // console.log('removed', removed[0].id)
+      // console.log(allCardsInSecondStage)
 
-      
-
-      console.log(allCardsInSecondStage)
 
 
 
 
-
-    } else if (allCardsInThirdStage.length - 1 > 0) {
-      ss.style.textShadow = '0px 0px 35px red';
-      ss.style.color = '#ff6d6d';
+    } else if (allCardsInThirdStage.length > 0) {
 
       let removed = arrSlice(allCardsInThirdStage, 1)
 
       allCardsInThirdStage = getObjects(allCardsInThirdStage, 'id', (removed[0].id))
       e.target.setAttribute('src', removed[0].cardFace);
 
-      console.log(allCardsInThirdStage)
+      if ((removed[0].id).includes('green')) {
+        if (thirdStageGreenCard.innerText != 0) {
+          thirdStageGreenCard.innerText = thirdStageGreenCard.innerText - 1 || 0;
+        }
+      }
+      if ((removed[0].id).includes('brown')) {
+        if (thirdStageBrownCard.textContent != 0) {
+          thirdStageBrownCard.innerText = thirdStageBrownCard.innerText - 1 || 0;
+        }
+      }
+      if ((removed[0].id).includes('blue')) {
+        if (thirdStageBlueCard.innerText != 0) {
+          thirdStageBlueCard.innerText = thirdStageBlueCard.innerText - 1 || 0;
+        }
+      }
+      if (allCardsInThirdStage.length == 0) {
+        ts.style.textShadow = '0px 0px 35px red';
+        ts.style.color = '#ff6d6d';
+      }
+      // console.log('removed', removed[0].id)
+      // console.log(allCardsInThirdStage)
 
     } else {
-      ts.style.textShadow = '0px 0px 35px red';
-      ts.style.color = '#ff6d6d';
+
       console.log('game over')
     }
 
