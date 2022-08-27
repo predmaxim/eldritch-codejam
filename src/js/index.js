@@ -12,6 +12,11 @@ const ancientCards = container.querySelectorAll('.ancient-card');
 const sectionElements = container.querySelectorAll('section');
 const allDifficulties = container.querySelectorAll('.difficulty-level');
 
+const firstStageDots = container.querySelectorAll('.first-stage .dot');
+const secondStageDots = container.querySelectorAll('.second-stage .dot');
+const thirdStageDots = container.querySelectorAll('.third-stage .dot');
+
+
 const firstStageGreenCard = container.querySelector('.first-stage .dot-green');
 const firstStageBrownCard = container.querySelector('.first-stage .dot-brown');
 const firstStageBlueCard = container.querySelector('.first-stage .dot-blue');
@@ -29,17 +34,42 @@ const timeOut = 200;
 let cardsImgInDeck; // array of images cards in deck
 let cardsInDeck = []; // array of objects cards in deck
 
+let greenCardsInDeck = [];
+let brownCardsInDeck = [];
+let blueCardsInDeck = [];
+
 let greenCardsWithDifficulty; // массив объектов - все выбранные зеленые карты с определенной сложностью
-let brownCardsTWithDifficulty; // массив объектов - все выбранные коричневые карты с определенной сложностью
+let brownCardsWithDifficulty; // массив объектов - все выбранные коричневые карты с определенной сложностью
 let blueCardsWithDifficulty; // массив объектов - все выбранные синие карты с определенной сложностью
 
-let firstStageAllCardInDeck;// число - кол-во карт первой стадии
-let secondStagAllCardInDeck;// число - кол-во карт второй стадии
-let thirdStageAllCardInDeck;// число - кол-во карт третьей стадии
+let firstStageAllCardsInDeckAmount;// число - кол-во карт первой стадии
+let secondStageAllCardsInDeckAmount;// число - кол-во карт второй стадии
+let thirdStageAllCardsInDeckAmount;// число - кол-во карт третьей стадии
 
-let allStageGreenCardInDeckToNeed;// число - кол-во зеленых карт
-let allStageBrownCardInDecToNeed;// число - кол-во коричневых карт
-let allStageBlueCardInDeckToNeed;// число - кол-во голубых карт
+let greenCardsInFirstStage;
+let greenCardsInSecondStage;
+let greenCardsInThirdStage;
+
+let brownCardsInFirstStage;
+let brownCardsInSecondStage;
+let brownCardsInThirdStage;
+
+let blueCardsInFirstStage;
+let blueCardsInSecondStage;
+let blueCardsInThirdStage;
+
+let allCardsInFirstStage = [];
+let allCardsInSecondStage = [];
+let allCardsInThirdStage = [];
+
+let allStageGreenCardsToNeedAmount;// число - кол-во зеленых карт
+let allStageBrownCardsToNeedAmount;// число - кол-во коричневых карт
+let allStageBlueCardsToNeedAmount;// число - кол-во голубых карт
+
+let missingCardsAmount = 0;
+let allCards;
+let cardsToNeed;
+let cardsWithDif;
 
 let selectedAncient; // DOM элемент - выбранный древний
 let ancient; // строка - данный древний
@@ -96,34 +126,53 @@ const rollUp = () => {
 }
 
 /**
- * @function getSelectedObj
+ * @function getObjectsFormArr
  * @param {array} arr - array contains objects when to find
- * @param {string} val - value of selected DOM element
- * @return {array} - get selected object
+ * @param {string} key - key to find
+ * @param {string} val - value to find
+ * @return {array} - return array of objects
  */
-const getSelectedObj = (arr, val) => {
-  let res;
-  arr.forEach((obj) => {
-    for (const key in obj) {
-      if (obj[key] == val) res = obj;
-    }
-  })
-  return res;
+const getObjectsFormArr = (arr, key, val) => {
+  return arr.filter((obj) => obj[key] == val ? obj : false)
 }
 
-/**
-* @function getCardsWithDifficulty
-* @param {array} arr - array of objects when to find
-* @param {string} dif - difficulty value to find
-* @return {array} - returns an array of objects of given difficulty
-* */
-const getCardsWithDifficulty = (arr, dif) => {
-  return arr.filter((obj) => {
-    for (const key in obj) {
-      return obj.difficulty == dif;
-    }
-  })
-}
+
+// const addCards = (color, dif, cardsDif) => {
+//   const colors = {
+//     green: {
+//       allCards: greenCards,
+//       cardsToNeed: allStageGreenCardsToNeedAmount,
+//       cardsWithDif: greenCardsWithDifficulty,
+//     },
+//     brown: {
+//       allCards: brownCards,
+//       cardsToNeed: allStageBrownCardsInDecToNeed,
+//       cardsWithDif: brownCardsTWithDifficulty,
+//     },
+//     blue: {
+//       allCards: blueCards,
+//       cardsToNeed: allStageBrownCardsInDecToNeed,
+//       cardsWithDif: blueCardsWithDifficulty,
+//     },
+//   }
+
+//   allCards = colors[color].allCards;
+//   // cardsToNeed = colors[color].cardsToNeed
+//   cardsWithDif = colors[color].cardsWithDif
+
+//   missingCardsAmount = cardsToNeed - cardsWithDif.length; // кол-во
+
+
+//   console.log('cardsWithDif',cardsWithDif)
+
+//   // if (difficulty.id == dif) {
+//     cardsToNeed = getRandomCardsWithDif(color, cardsDif, missingCardsAmount); // arr of obj
+//     console.log('cardsToNeed',cardsToNeed)
+//     putCardsInDeck(cardsToNeed, cardsInDeck);
+//   // }
+
+// }
+
 
 /** 
  * @function setDeck
@@ -153,34 +202,74 @@ const setDeck = (ancient) => {
 const random = (max, amount) => {
   let min = 0;
   let countR = [];
-  for (let i = 0; i < amount; i++) {
+
+  while (countR.length < amount) {
     let r = Math.floor(Math.random() * (max - min + 1)) + min;
-    !countR.includes(r) ? countR.push(r) : a++;
+    if (countR.indexOf(r) === -1) countR.push(r);
   }
-  return countR;
+
+  return countR
 };
+
+/** 
+* @function getRandomCardsWithDif
+* @param {array} arr - array of card
+* @param {string} dif - difficulty
+* @param {number} mis - number of missing cards
+* @returns {array} - get random cards in range and return array of cards objects 
+* */
+const getRandomCardsWithDif = (arr, dif, mis) => {
+  let res = [];
+  const сardsWithDifficulty = getObjectsFormArr(arr, 'difficulty', dif);
+  return random(сardsWithDifficulty.length - 1, mis).reduce((acc, cur, idx) => {
+    сardsWithDifficulty.forEach((el, i) => { if (i == cur) res.push(el) });
+    return res;
+  }, [])
+}
 
 /** 
 * @function getRandomCards
 * @param {array} arr - array of card
 * @param {string} dif - difficulty
-* @param {number} mis - number of missing cards
-* @returns {array} - get random cards in range and return array of objects
+* @param {number} amount - number of cards
+* @returns {array} - get random cards in range and return array of cards objects 
 * */
-const getRandomCards = (arr, dif, mis) => {
-  const сardsWithDifficulty = getCardsWithDifficulty(arr, dif);
-  return random(сardsWithDifficulty.length, mis).reduce((acc, el) => {
-    return сardsWithDifficulty.filter((obj, i) => {if (el == i) return obj})
+const getRandomCards = (arr, amount, color) => {
+  let res = [];
+  return random(arr.length - 1, amount).reduce((acc, cur, idx) => {
+    arr.forEach((el, i) => { if (i == cur) res.push(el) });
+    return res;
   }, [])
 }
 
 /** 
  * @function putCardsInDeck
- * @param {array} el - array of objects to send
- * @param {array} arr - storage array
+ * @param {array} arr - array of objects to send
+ * @param {array} StoreArr - storage array
  * @return {*} - keeps the deck
  */
-const putCardsInDeck = (el, arr) => el.forEach((e) => arr.push(e));
+const putCardsInDeck = (arr, StoreArr) => arr.forEach((e) => StoreArr.push(e));
+
+
+
+
+
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
 
 document.addEventListener('click', (e) => {
 
@@ -202,45 +291,45 @@ document.addEventListener('click', (e) => {
 
     selectedAncient = e.target.getAttribute('id');
 
-    ancient = getSelectedObj(AncientsData, selectedAncient)
+    ancient = getObjectsFormArr(AncientsData, 'id', selectedAncient)[0];
+    console.log(selectedAncient, ancient)
 
-    setDeck(ancient); // установил колоду
+    // setDeck(ancient); // установил колоду
 
     cardsInDeck = []; // обнуляем колоду
 
     // кол-во карт первой стадии
-    firstStageAllCardInDeck =
+    firstStageAllCardsInDeckAmount =
       ancient.firstStage.greenCards +
       ancient.firstStage.brownCards +
       ancient.firstStage.blueCards;
 
     // кол-во карт второй стадии
-    secondStagAllCardInDeck =
+    secondStageAllCardsInDeckAmount =
       ancient.secondStage.greenCards +
       ancient.secondStage.brownCards +
       ancient.secondStage.blueCards;
 
     // кол-во карт третьей стадии
-    thirdStageAllCardInDeck =
+    thirdStageAllCardsInDeckAmount =
       ancient.thirdStage.greenCards +
       ancient.thirdStage.brownCards +
       ancient.thirdStage.blueCards;
 
 
     // кол-во зеленых карт
-    allStageGreenCardInDeckToNeed =
+    allStageGreenCardsToNeedAmount =
       ancient.firstStage.greenCards +
       ancient.secondStage.greenCards +
       ancient.thirdStage.greenCards;
-    console.log('allStageGreenCardInDeckToNeed', allStageGreenCardInDeckToNeed)
     // кол-во коричневых карт
-    allStageBrownCardInDecToNeed =
+    allStageBrownCardsToNeedAmount =
       ancient.firstStage.brownCards +
       ancient.secondStage.brownCards +
       ancient.thirdStage.brownCards;
 
     // кол-во голубых карт
-    allStageBlueCardInDeckToNeed =
+    allStageBlueCardsToNeedAmount =
       ancient.firstStage.blueCards +
       ancient.secondStage.blueCards +
       ancient.thirdStage.blueCards;
@@ -250,79 +339,198 @@ document.addEventListener('click', (e) => {
 
   // stage
   if (e.target.classList.contains('difficulty-level')) {
-    console.log(e.target.getAttribute('id'))
+
     allDifficulties.forEach((el) => el.classList.remove('active'));
     setTimeout(() => e.target.classList.toggle('active'), timeOut)
     rollDown();
 
     selectedDifficulty = e.target.getAttribute('id');
-    difficulty = getSelectedObj(Difficulties, selectedDifficulty);
+    difficulty = getObjectsFormArr(Difficulties, selectedDifficulty)[0];
 
 
-    greenCardsWithDifficulty = getCardsWithDifficulty(greenCards, difficulty.id); // массив объектов - все выбранные зеленые карты с определенной сложностью
-    brownCardsTWithDifficulty = getCardsWithDifficulty(brownCards, difficulty.id); // массив объектов - все выбранные коричневые карты с определенной сложностью
-    blueCardsWithDifficulty = getCardsWithDifficulty(blueCards, difficulty.id); // массив объектов - все выбранные синие карты с определенной сложностью
+    greenCardsWithDifficulty = getObjectsFormArr(greenCards, 'difficulty', difficulty.id); // массив объектов - все выбранные зеленые карты с определенной сложностью
+    brownCardsWithDifficulty = getObjectsFormArr(brownCards, 'difficulty', difficulty.id); // массив объектов - все выбранные коричневые карты с определенной сложностью
+    blueCardsWithDifficulty = getObjectsFormArr(blueCards, 'difficulty', difficulty.id); // массив объектов - все выбранные синие карты с определенной сложностью
 
     cardsInDeck = [];
 
-    putCardsInDeck(greenCardsWithDifficulty, cardsInDeck);
-    putCardsInDeck(brownCardsTWithDifficulty, cardsInDeck);
-    putCardsInDeck(blueCardsWithDifficulty, cardsInDeck);
-    console.log('cardsInDeck', cardsInDeck)
 
-    // const getAllCardsAmount = (arr, color) => {
-    //   const colors = { greenCards: 'green', brownCards: 'brown', blueCards: 'blue' };
-    //   let c;
-
-    //   for (const key in colors) {
-    //     if (colors[key] == color) c = key;
-    //   }
-
-    //   return arr.reduce((acc, cur) => {
-    //     for (const key in cur) {
-    //       return cur.firstStage[c] + cur.secondStage[c] + cur.thirdStage[c];
-    //     }
-    //   }, 0)
-    // }
-
-    // ! правила добора недостающих карт
 
     // зеленые карты
-    if (greenCardsWithDifficulty.length < allStageGreenCardInDeckToNeed) {
+    if (greenCardsWithDifficulty.length < allStageGreenCardsToNeedAmount) {
 
+      missingCardsAmount = allStageGreenCardsToNeedAmount - greenCardsWithDifficulty.length; // кол-во
 
-      let missingCardsAmount = allStageGreenCardInDeckToNeed - greenCardsWithDifficulty.length; // кол-во
-
-      console.log('missingCardsAmount', missingCardsAmount);
+      putCardsInDeck(greenCardsWithDifficulty, cardsInDeck);
 
       if (difficulty.id == 'easy') {
-        let cardsToNeed = getRandomCards(greenCards, 'normal', missingCardsAmount); // arr of obj
-        console.log('cardsToNeed', cardsToNeed);
-
+        cardsToNeed = getRandomCardsWithDif(greenCards, 'normal', missingCardsAmount); // arr of obj
         putCardsInDeck(cardsToNeed, cardsInDeck);
-        console.log('cardsInDeck with missing cards', cardsInDeck);
+        // console.log(cardsInDeck)
       }
 
       if (difficulty.id == 'normal') {
-        let cardsToNeed = getRandomCards(greenCards, 'easy', missingCardsAmount); // arr of obj
+        cardsToNeed = getRandomCardsWithDif(greenCards, 'easy', missingCardsAmount); // arr of obj
+        putCardsInDeck(cardsToNeed, cardsInDeck);
+        // console.log(cardsInDeck)
       }
 
       if (difficulty.id == 'hard') {
-        let cardsToNeed = getRandomCards(greenCards, 'normal', missingCardsAmount); // arr of obj
+        cardsToNeed = getRandomCardsWithDif(greenCards, 'normal', missingCardsAmount); // arr of obj
+        putCardsInDeck(cardsToNeed, cardsInDeck);
+        // console.log(cardsInDeck)
       }
+    } else {
+      putCardsInDeck(getRandomCardsWithDif(greenCards, difficulty.id, allStageGreenCardsToNeedAmount), cardsInDeck);
     }
 
-    // const 
+    // коричневые карты
+    if (brownCardsWithDifficulty.length < allStageBrownCardsToNeedAmount) {
 
+      missingCardsAmount = allStageBrownCardsToNeedAmount - brownCardsWithDifficulty.length; // кол-во
+
+      putCardsInDeck(brownCardsWithDifficulty, cardsInDeck);
+
+      if (difficulty.id == 'easy') {
+        cardsToNeed = getRandomCardsWithDif(brownCards, 'normal', missingCardsAmount); // arr of obj
+
+        putCardsInDeck(cardsToNeed, cardsInDeck);
+        // console.log(cardsToNeed)
+      }
+
+      if (difficulty.id == 'normal') {
+        cardsToNeed = getRandomCardsWithDif(brownCards, 'easy', missingCardsAmount); // arr of obj
+
+        putCardsInDeck(cardsToNeed, cardsInDeck);
+        // console.log(cardsInDeck)
+      }
+
+      if (difficulty.id == 'hard') {
+        cardsToNeed = getRandomCardsWithDif(brownCards, 'normal', missingCardsAmount); // arr of obj
+
+        putCardsInDeck(cardsToNeed, cardsInDeck);
+        // console.log(cardsInDeck)
+      }
+    } else {
+      putCardsInDeck(getRandomCardsWithDif(brownCards, difficulty.id, allStageBrownCardsToNeedAmount), cardsInDeck);
+    }
+
+    // голубые карты
+    if (blueCardsWithDifficulty.length < allStageBlueCardsToNeedAmount) {
+
+      missingCardsAmount = allStageBlueCardsToNeedAmount - blueCardsWithDifficulty.length; // кол-во
+
+      putCardsInDeck(blueCardsWithDifficulty, cardsInDeck);
+
+      if (difficulty.id == 'easy') {
+        cardsToNeed = getRandomCardsWithDif(blueCards, 'normal', missingCardsAmount); // arr of obj
+
+        putCardsInDeck(cardsToNeed, cardsInDeck);
+        // console.log(cardsInDeck)
+      }
+
+      if (difficulty.id == 'normal') {
+        cardsToNeed = getRandomCardsWithDif(blueCards, 'easy', missingCardsAmount); // arr of obj
+
+        putCardsInDeck(cardsToNeed, cardsInDeck);
+        // console.log(cardsInDeck)
+      }
+
+      if (difficulty.id == 'hard') {
+        cardsToNeed = getRandomCardsWithDif(blueCards, 'normal', missingCardsAmount); // arr of obj
+
+        putCardsInDeck(cardsToNeed, cardsInDeck);
+        // console.log(cardsInDeck)
+      }
+    } else {
+      putCardsInDeck(getRandomCardsWithDif(blueCards, difficulty.id, allStageBlueCardsToNeedAmount), cardsInDeck);
+    }
+
+    allCardsInFirstStage = [];
+    allCardsInSecondStage = [];
+    allCardsInThirdStage = [];
+    allCards = [];
+
+    greenCardsInFirstStage = getObjectsFormArr(cardsInDeck, 'color', 'green');
+    brownCardsInFirstStage = getObjectsFormArr(cardsInDeck, 'color', 'brown');
+    blueCardsInFirstStage = getObjectsFormArr(cardsInDeck, 'color', 'blue');
+    greenCardsInSecondStage = getObjectsFormArr(cardsInDeck, 'color', 'green');
+    brownCardsInSecondStage = getObjectsFormArr(cardsInDeck, 'color', 'brown');
+    blueCardsInSecondStage = getObjectsFormArr(cardsInDeck, 'color', 'blue');
+    greenCardsInThirdStage = getObjectsFormArr(cardsInDeck, 'color', 'green');
+    brownCardsInThirdStage = getObjectsFormArr(cardsInDeck, 'color', 'brown');
+    blueCardsInThirdStage = getObjectsFormArr(cardsInDeck, 'color', 'blue');
+
+    greenCardsInFirstStage.forEach((e) => { allCardsInFirstStage.push(e) });
+    greenCardsInSecondStage.forEach((e) => { allCardsInSecondStage.push(e) });
+    greenCardsInThirdStage.forEach((e) => { allCardsInThirdStage.push(e) });
+
+    brownCardsInFirstStage.forEach((e) => { allCardsInFirstStage.push(e) });
+    brownCardsInSecondStage.forEach((e) => { allCardsInSecondStage.push(e) });
+    brownCardsInThirdStage.forEach((e) => { allCardsInThirdStage.push(e) });
+
+    blueCardsInFirstStage.forEach((e) => { allCardsInFirstStage.push(e) });
+    blueCardsInSecondStage.forEach((e) => { allCardsInSecondStage.push(e) });
+    blueCardsInThirdStage.forEach((e) => { allCardsInThirdStage.push(e) });
+
+    allCardsInFirstStage.forEach((e) => { allCards.push(e) });
+    allCardsInSecondStage.forEach((e) => { allCards.push(e) });
+    allCardsInThirdStage.forEach((e) => { allCards.push(e) });
+
+
+    firstStageGreenCard.textContent = ancient.firstStage.greenCards;
+    firstStageBrownCard.textContent = ancient.firstStage.brownCards;
+    firstStageBlueCard.textContent = ancient.firstStage.blueCards;
+
+    secondStageGreenCard.textContent = ancient.secondStage.greenCards;
+    secondStageBrownCard.textContent = ancient.secondStage.brownCards;
+    secondStageBlueCard.textContent = ancient.secondStage.blueCards;
+
+    thirdStageGreenCard.textContent = ancient.thirdStage.greenCards;
+    thirdStageBrownCard.textContent = ancient.thirdStage.brownCards;
+    thirdStageBlueCard.textContent = ancient.thirdStage.blueCards;
+
+    console.log('cardsInDeck', cardsInDeck)
+    console.log('greenCardsInFirstStage', greenCardsInFirstStage)
 
   }
+
+  // firstStageDots.reduce((acc, cur) => {
+
+  // }, 0)
+
+  // secondStageDots
+  // thirdStageDots
+
+
+  random()
+
 
 
   // deck-img
   if (e.target.classList.contains('deck-img')) {
-    console.log('deck-img')
+
+    if (allCardsInFirstStage.length - 1 > 0) {
+
+      allCardsInFirstStage.splice(0, 1);
+      console.log(allCardsInFirstStage)
+
+    } else if (allCardsInSecondStage.length - 1 > 0) {
+
+      allCardsInSecondStage.splice(0, 1);
+      console.log(allCardsInSecondStage)
+
+    } else if (allCardsInThirdStage.length - 1 > 0) {
+
+      allCardsInThirdStage.splice(0, 1);
+      console.log(allCardsInThirdStage)
+
+    } else console.log('game over')
+
+    allCardsInFirstStage
   }
 
 });
 
-
+// TODO при нажатии отбирать карты из общей колоды отдельно по стадиям
+// TODO при нажатии показывать рубашку карты
