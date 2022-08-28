@@ -132,6 +132,7 @@ const rollUp = () => {
  * @param {array} arr - array contains objects when to find
  * @param {string} key - key to find
  * @param {string} val - value to find
+ * @param {string} remove - optional trigger. If it is specified, then will exclude objects with val
  * @return {array} - return array of objects
  */
 const getObjects = (arr, key, val, remove) => {
@@ -146,33 +147,29 @@ const getObjects = (arr, key, val, remove) => {
  * @return {array} - returns array of unique digits
  */
 const random = (max, amount) => {
-  let min = 0;
   let countR = [];
-
   while (countR.length < amount) {
-    let r = Math.floor(Math.random() * (max - min + 1)) + min;
+    let r = Math.floor(Math.random() * (max + 1));
     if (countR.indexOf(r) === -1) countR.push(r);
   }
-
   return countR
 };
 
 /** 
 * @function getRandomCards
-* @param {array} arr - array of card
+* @param {array} arr - array of objects(cards)
 * @param {string} dif - difficulty
 * @param {number} amount - number of cards to need return
-* @returns {array} - get random cards in range and return array of cards objects 
+* @returns {array} - get random cards in range and return array of objects(cards)
 * */
 const getRandomCards = (arr, dif, amount) => {
   let res = [];
   const сardsWithDifficulty = getObjects(arr, 'difficulty', dif);
-  return random(сardsWithDifficulty.length - 1, amount).reduce((acc, cur) => {
-    сardsWithDifficulty.forEach((el, i) => { 
-      if (i == cur) res.push(el) 
-    });
-    return res;
-  }, [])
+  сardsWithDifficulty.forEach((obj, i) => {
+    random(сardsWithDifficulty.length - 1, amount)
+      .forEach((el) => el == i ? res.push(obj) : false);
+  })
+  return res;
 };
 
 /**
@@ -194,10 +191,14 @@ const arrSlice = (arr, num) => {
  * @function putCardsInArr
  * @param {array} arr - array of objects to send
  * @param {array} StoreArr - storage array
- * @return {*} - keeps the deck
+ * @return {*} - put cards in array
  */
 const putCardsInArr = (arr, StoreArr) => arr.forEach((e) => StoreArr.push(e));
 
+/** 
+ * @function checkCards
+ * @return {*} - check the deck, puts cards it if the deck is not full
+ */
 const checkCards = () => {
   // зеленые карты
   if (greenCardsWithDifficulty.length < allStageGreenCardsToNeedAmount) {
@@ -209,22 +210,16 @@ const checkCards = () => {
     if (difficulty == 'easy') {
       cardsToNeed = getRandomCards(greenCards, 'normal', missingCardsAmount); // arr of obj
       putCardsInArr(cardsToNeed, cardsInDeck);
-      // console.log(cardsInDeck)
     }
 
     if (difficulty == 'normal') {
-      cardsToNeed = getRandomCards(
-        getObjects(greenCards, 'difficulty', 'easy'),
-        missingCardsAmount
-      );
+      cardsToNeed = getRandomCards(greenCards, 'easy', missingCardsAmount);
       putCardsInArr(cardsToNeed, cardsInDeck);
-      // console.log(cardsInDeck)
     }
 
     if (difficulty == 'hard') {
       cardsToNeed = getRandomCards(greenCards, 'normal', missingCardsAmount); // arr of obj
       putCardsInArr(cardsToNeed, cardsInDeck);
-      // console.log(cardsInDeck)
     }
 
   } else {
@@ -240,23 +235,17 @@ const checkCards = () => {
 
     if (difficulty == 'easy') {
       cardsToNeed = getRandomCards(brownCards, 'normal', missingCardsAmount); // arr of obj
-
       putCardsInArr(cardsToNeed, cardsInDeck);
-      // console.log(cardsToNeed)
     }
 
     if (difficulty == 'normal') {
       cardsToNeed = getRandomCards(brownCards, 'easy', missingCardsAmount); // arr of obj
-
       putCardsInArr(cardsToNeed, cardsInDeck);
-      // console.log(cardsInDeck)
     }
 
     if (difficulty == 'hard') {
       cardsToNeed = getRandomCards(brownCards, 'normal', missingCardsAmount); // arr of obj
-
       putCardsInArr(cardsToNeed, cardsInDeck);
-      // console.log(cardsInDeck)
     }
   } else {
     putCardsInArr(getRandomCards(brownCards, difficulty, allStageBrownCardsToNeedAmount), cardsInDeck);
@@ -271,29 +260,27 @@ const checkCards = () => {
 
     if (difficulty == 'easy') {
       cardsToNeed = getRandomCards(blueCards, 'normal', missingCardsAmount); // arr of obj
-
       putCardsInArr(cardsToNeed, cardsInDeck);
-      // console.log(cardsInDeck)
     }
 
     if (difficulty == 'normal') {
       cardsToNeed = getRandomCards(blueCards, 'easy', missingCardsAmount); // arr of obj
-
       putCardsInArr(cardsToNeed, cardsInDeck);
-      // console.log(cardsInDeck)
     }
 
     if (difficulty == 'hard') {
       cardsToNeed = getRandomCards(blueCards, 'normal', missingCardsAmount); // arr of obj
-
       putCardsInArr(cardsToNeed, cardsInDeck);
-      // console.log(cardsInDeck)
     }
   } else {
     putCardsInArr(getRandomCards(blueCards, difficulty, allStageBlueCardsToNeedAmount), cardsInDeck);
   }
 }
 
+/** 
+ * @function formDeck
+ * @return {*} - form the deck and cards on stage
+ */
 const formDeck = () => {
 
   greenCardsInFirstStage = arrSlice(getObjects(cardsInDeck, 'color', 'green'), ancient.firstStage.greenCards);
@@ -308,26 +295,27 @@ const formDeck = () => {
   brownCardsInThirdStage = arrSlice(getObjects(cardsInDeck, 'color', 'brown'), ancient.thirdStage.brownCards);
   blueCardsInThirdStage = arrSlice(getObjects(cardsInDeck, 'color', 'blue'), ancient.thirdStage.blueCards);
 
-  putCardsInArr(greenCardsInFirstStage,allCardsInFirstStage);
-  putCardsInArr(greenCardsInSecondStage,allCardsInSecondStage);
-  putCardsInArr(greenCardsInThirdStage,allCardsInThirdStage);
+  putCardsInArr(greenCardsInFirstStage, allCardsInFirstStage);
+  putCardsInArr(greenCardsInSecondStage, allCardsInSecondStage);
+  putCardsInArr(greenCardsInThirdStage, allCardsInThirdStage);
 
-  putCardsInArr(brownCardsInFirstStage,allCardsInFirstStage);
-  putCardsInArr(brownCardsInSecondStage,allCardsInSecondStage);
-  putCardsInArr(brownCardsInThirdStage,allCardsInThirdStage);
+  putCardsInArr(brownCardsInFirstStage, allCardsInFirstStage);
+  putCardsInArr(brownCardsInSecondStage, allCardsInSecondStage);
+  putCardsInArr(brownCardsInThirdStage, allCardsInThirdStage);
 
-  putCardsInArr(blueCardsInFirstStage,allCardsInFirstStage);
-  putCardsInArr(blueCardsInSecondStage,allCardsInSecondStage);
-  putCardsInArr(blueCardsInThirdStage,allCardsInThirdStage);
+  putCardsInArr(blueCardsInFirstStage, allCardsInFirstStage);
+  putCardsInArr(blueCardsInSecondStage, allCardsInSecondStage);
+  putCardsInArr(blueCardsInThirdStage, allCardsInThirdStage);
 
-  putCardsInArr(allCardsInFirstStage,allCards);
-  putCardsInArr(allCardsInSecondStage,allCards);
-  putCardsInArr(allCardsInThirdStage,allCards);
+  putCardsInArr(allCardsInFirstStage, allCards);
+  putCardsInArr(allCardsInSecondStage, allCards);
+  putCardsInArr(allCardsInThirdStage, allCards);
 }
 
 /**
  * @function newGame
- * @return {*} - hide info and clear stages
+ * @param {DOM} target
+ * @return {*} - starts a new game
  * */
 const newGame = (target) => {
   allCardsInFirstStage = [];
@@ -409,6 +397,11 @@ const newGame = (target) => {
 
 };
 
+/** 
+ * @function stageComplete
+ * @param {string} stage - stage to clear
+ * @return {*} - clear stage styles
+ */
 const stageComplete = (stage) => {
   stage.style.textShadow = '0px 0px 35px red';
   stage.style.color = '#ff6d6d';
@@ -432,6 +425,10 @@ const putDeck = () => {
   thirdStageBlueCard.textContent = ancient.thirdStage.blueCards;
 };
 
+/** 
+ * @function changeCard
+ * @return {*} - change the cards image and delete card from deck
+ */
 const changeCard = () => {
 
   if (allCardsInFirstStage.length > 0) {
@@ -498,4 +495,3 @@ const changeCard = () => {
 
 
 }
-
