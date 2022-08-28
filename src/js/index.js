@@ -19,17 +19,20 @@ document.addEventListener('click', (e) => {
   // ancient-card
   if (e.target.classList.contains('ancient-card')) {
     rollDown();
-    newGame(e.target);
+    newGame(e.target);    
   }
 
   // stage
   if (e.target.classList.contains('difficulty-level')) {          
     rollDown();
     putDeck();
-    newGame(e.target);      
+    newGame(e.target); 
+    setTimeout(() => info2.classList.remove('dispnone'), 1000) 
   }
 
   // deck-img
   if (e.target.classList.contains('deck-img')) changeCard();
+
+  if (e.target.classList.contains('close')) info2.classList.add('dispnone');
 
 });

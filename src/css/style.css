@@ -46,6 +46,7 @@ h6 {
 }
 
 section {
+  position: relative;
   min-height: 100vh;
   height: 100%;
   transition: .4s;
@@ -242,7 +243,6 @@ section {
   background: #100202;
   padding: 20px 50px;
   box-shadow: 0px 5px 50px -10px rgb(250, 66, 66);
-
   font-size: 20px;
   font-weight: 700;
   left: 0;
@@ -259,4 +259,35 @@ section {
 
 .info p {
   margin: auto;
+}
+
+.info2 {
+  display: flex;
+  position: absolute;
+  position: fixed;
+  background: #5b4b4b;
+  padding: 20px 50px;
+  box-shadow: 0px 5px 50px -10px rgb(50, 11, 11);
+  font-size: 20px;
+  font-weight: 700;
+  left: 50%;
+  bottom: 20%;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  transform: translate(-50%, 50%);
+  -webkit-transform: translate(-50%, 50%);
+  -moz-transform: translate(-50%, 50%);
+  -ms-transform: translate(-50%, 50%);
+  -o-transform: translate(-50%, 50%);
+}
+
+.info2 .close {
+  position: absolute;
+  cursor: pointer;
+  padding: 5px 10px;
+  top: 10px;
+  right: 10px;
 }
