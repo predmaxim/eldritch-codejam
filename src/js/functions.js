@@ -298,6 +298,25 @@ const checkCards = () => {
 }
 
 /** 
+ * @function cachImgs
+ * @return {*} - cach imgs in deck
+ */
+const cachImgs = () => {
+  const cardsImg = [];
+
+  allCards.forEach((obj) => {
+    for (const key in obj) {
+      if (key == 'cardFace') cardsImg.push(obj[key]);
+    }
+  })
+
+  for (let s of cardsImg) {
+    let img = new Image();
+    img.src = s;
+  }
+}
+
+/** 
  * @function formDeck
  * @return {*} - form the deck and cards on stage
  */
@@ -330,6 +349,8 @@ const formDeck = () => {
   putCardsInArr(allCardsInFirstStage, allCards);
   putCardsInArr(allCardsInSecondStage, allCards);
   putCardsInArr(allCardsInThirdStage, allCards);
+  cachImgs();
+
 }
 
 /**
