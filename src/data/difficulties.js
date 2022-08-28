@@ -10,7 +10,7 @@ const difficulties = [
   {
     id: 'hard',
     name: 'Высокая'
-  },
+  }
 ]
 
 export default difficulties

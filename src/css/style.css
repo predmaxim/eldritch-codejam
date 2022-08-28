@@ -165,6 +165,7 @@ section {
 .card-map {
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .first-stage p {
@@ -234,4 +235,28 @@ section {
 .deck-img:hover {
   background: rgb(250 207 66 / 28%);
   box-shadow: 0 0 38px 0px rgb(250 207 66);
+}
+
+.info {
+  position: absolute;
+  background: #100202;
+  padding: 20px 50px;
+  box-shadow: 0px 5px 50px -10px rgb(250, 66, 66);
+
+  font-size: 20px;
+  font-weight: 700;
+  left: 0;
+  right: 0;
+  top: 3px;
+  bottom: 15px;
+  display: flex;
+  border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+}
+
+.info p {
+  margin: auto;
 }
