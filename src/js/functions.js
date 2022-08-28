@@ -196,10 +196,30 @@ const arrSlice = (arr, num) => {
 const putCardsInArr = (arr, StoreArr) => arr.forEach((e) => StoreArr.push(e));
 
 /** 
+ * @function getCardsWithDiff
+ * @param {string} dif - difficulty string
+ * @return {*} - set cards by color with given difficulty
+ */
+const getCardsWithDiff = (dif) => {
+  greenCardsWithDifficulty = getObjects(greenCards, 'difficulty', dif); // массив объектов - все выбранные зеленые карты с определенной сложностью
+  brownCardsWithDifficulty = getObjects(brownCards, 'difficulty', dif); // массив объектов - все выбранные коричневые карты с определенной сложностью
+  blueCardsWithDifficulty = getObjects(blueCards, 'difficulty', dif); // массив объектов - все выбранные синие карты с определенной сложностью
+}
+
+/** 
  * @function checkCards
  * @return {*} - check the deck, puts cards it if the deck is not full
  */
 const checkCards = () => {
+
+  if (difficulty == 'veryEasy') {
+    difficulty = 'easy';
+  } else if (difficulty == 'veryHard') {
+    difficulty = 'hard';
+  }
+
+  getCardsWithDiff(difficulty);
+
   // зеленые карты
   if (greenCardsWithDifficulty.length < allStageGreenCardsToNeedAmount) {
 
@@ -374,11 +394,7 @@ const newGame = (target) => {
     allDifficulties.forEach((el) => el.classList.remove('active'));
     selectedDifficulty = target;
 
-    difficulty = getObjects(Difficulties, 'id', target.id)[0].id;
-
-    greenCardsWithDifficulty = getObjects(greenCards, 'difficulty', difficulty); // массив объектов - все выбранные зеленые карты с определенной сложностью
-    brownCardsWithDifficulty = getObjects(brownCards, 'difficulty', difficulty); // массив объектов - все выбранные коричневые карты с определенной сложностью
-    blueCardsWithDifficulty = getObjects(blueCards, 'difficulty', difficulty); // массив объектов - все выбранные синие карты с определенной сложностью
+    difficulty = target.id;
 
     checkCards();
     formDeck();
