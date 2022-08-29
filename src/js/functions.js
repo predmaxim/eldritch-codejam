@@ -519,15 +519,15 @@ const changeCard = () => {
 
     if ((removed[0].id).includes('green')) {
       firstStageGreenCard.innerText = firstStageGreenCard.innerText - 1 || 0;
-      light(firstStageGreenCard);
+      // light(firstStageGreenCard);
     }
     if ((removed[0].id).includes('brown')) {
       firstStageBrownCard.innerText = firstStageBrownCard.innerText - 1 || 0;
-      light(firstStageBrownCard);
+      // light(firstStageBrownCard);
     }
     if ((removed[0].id).includes('blue')) {
       firstStageBlueCard.innerText = firstStageBlueCard.innerText - 1 || 0;
-      light(firstStageBrownCard);
+      // light(firstStageBrownCard);
     }
 
   } else if (allCardsInSecondStage.length > 0) {
@@ -539,17 +539,17 @@ const changeCard = () => {
 
     if ((removed[0].id).includes('green')) {
       secondStageGreenCard.innerText = secondStageGreenCard.innerText - 1 || 0;
-      light(secondStageGreenCard);
+      // light(secondStageGreenCard);
 
     }
     if ((removed[0].id).includes('brown')) {
       secondStageBrownCard.innerText = secondStageBrownCard.innerText - 1 || 0;
-      light(secondStageBrownCard);
+      // light(secondStageBrownCard);
 
     }
     if ((removed[0].id).includes('blue')) {
       secondStageBlueCard.innerText = secondStageBlueCard.innerText - 1 || 0;
-      light(secondStageBlueCard);
+      // light(secondStageBlueCard);
 
     }
   } else if (allCardsInThirdStage.length > 0) {
@@ -561,17 +561,17 @@ const changeCard = () => {
 
     if ((removed[0].id).includes('green')) {
       thirdStageGreenCard.innerText = thirdStageGreenCard.innerText - 1 || 0;
-      light(thirdStageGreenCard);
+      // light(thirdStageGreenCard);
     }
 
     if ((removed[0].id).includes('brown')) {
       thirdStageBrownCard.innerText = thirdStageBrownCard.innerText - 1 || 0;
-      light(thirdStageBrownCard);
+      // light(thirdStageBrownCard);
     }
 
     if ((removed[0].id).includes('blue')) {
       thirdStageBlueCard.innerText = thirdStageBlueCard.innerText - 1 || 0;
-      light(thirdStageBlueCard);
+      // light(thirdStageBlueCard);
     }
   }
 
