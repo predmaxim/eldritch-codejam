@@ -166,13 +166,9 @@ const getRandomCards = (arr, dif, amount) => {
   let res = [];
   const сardsWithDifficulty = getObjects(arr, 'difficulty', dif);
   let randomIndexes = random(сardsWithDifficulty.length - 1, amount);
-
-  console.log('randomIndexes:', randomIndexes)
-
   сardsWithDifficulty.forEach((obj, i) => {
     randomIndexes.forEach((el) => el == i ? res.push(obj) : false);
   })
-
   return res;
 };
 
