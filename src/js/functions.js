@@ -132,12 +132,12 @@ const rollUp = () => {
  * @param {array} arr - array contains objects when to find
  * @param {string} key - key to find
  * @param {string} val - value to find
- * @param {string} remove - optional trigger. If it is specified, then will exclude objects with val
+ * @param {string} exclude - optional trigger. If it is specified, then will exclude objects with val
  * @return {array} - return array of objects
  */
-const getObjects = (arr, key, val, remove) => {
-  if (remove) return arr.filter((obj) => obj[key] != val ? obj : false);
-  else return arr.filter((obj) => obj[key] == val ? obj : false);
+const getObjects = (arr, key, val, exclude) => {
+  if (exclude) return arr.filter((obj) => obj[key] != val ? obj : false);
+  return arr.filter((obj) => obj[key] == val ? obj : false);
 }
 
 /**
@@ -165,20 +165,24 @@ const random = (max, amount) => {
 const getRandomCards = (arr, dif, amount) => {
   let res = [];
   const сardsWithDifficulty = getObjects(arr, 'difficulty', dif);
+  let randomIndexes = random(сardsWithDifficulty.length - 1, amount);
+
+  console.log('randomIndexes:', randomIndexes)
+
   сardsWithDifficulty.forEach((obj, i) => {
-    random(сardsWithDifficulty.length - 1, amount)
-      .forEach((el) => el == i ? res.push(obj) : false);
+    randomIndexes.forEach((el) => el == i ? res.push(obj) : false);
   })
+
   return res;
 };
 
 /**
- * @function arrSlice
+ * @function getFromArr
  * @param {array} arr - array to slice
  * @param {number} num - number of objects to return
  * @return {number} - returns sliced array of objects 
  */
-const arrSlice = (arr, num) => {
+const getFromArr = (arr, num) => {
   const r = random(arr.length - 1, num);
   return arr.filter((obj, idx) => {
     for (let i = 0; i < r.length; i++) {
@@ -186,6 +190,10 @@ const arrSlice = (arr, num) => {
     }
   })
 };
+
+// const getFromArr = (arr, num) => {
+//   return arr.splice(0, num)
+// };
 
 /** 
  * @function putCardsInArr
@@ -243,7 +251,7 @@ const checkCards = () => {
     }
 
   } else {
-    putCardsInArr(getRandomCards(greenCards, difficulty, allStageGreenCardsToNeedAmount), cardsInDeck);
+    putCardsInArr(getRandomCards(greenCardsWithDifficulty, difficulty, allStageGreenCardsToNeedAmount), cardsInDeck);
   }
 
   // коричневые карты
@@ -268,7 +276,7 @@ const checkCards = () => {
       putCardsInArr(cardsToNeed, cardsInDeck);
     }
   } else {
-    putCardsInArr(getRandomCards(brownCards, difficulty, allStageBrownCardsToNeedAmount), cardsInDeck);
+    putCardsInArr(getRandomCards(brownCardsWithDifficulty, difficulty, allStageBrownCardsToNeedAmount), cardsInDeck);
   }
 
   // голубые карты
@@ -293,7 +301,7 @@ const checkCards = () => {
       putCardsInArr(cardsToNeed, cardsInDeck);
     }
   } else {
-    putCardsInArr(getRandomCards(blueCards, difficulty, allStageBlueCardsToNeedAmount), cardsInDeck);
+    putCardsInArr(getRandomCards(blueCardsWithDifficulty, difficulty, allStageBlueCardsToNeedAmount), cardsInDeck);
   }
 }
 
@@ -317,22 +325,54 @@ const cachImgs = () => {
 }
 
 /** 
+ * @function delFromArr
+ * @param {array} arrFrom - array of objects from delete
+ * @param {array} arrTo - array of objects to delete
+ * @return {*} - delete objects from array
+ */
+const delFromArr = (arrFrom, arrTo) => {
+  arrFrom.forEach((obj, idx) => {
+    arrTo.forEach((el, i) => {
+      if (obj.id == el.id) {
+        arrFrom.splice(idx, 1)
+      }
+    })
+  })
+}
+
+/** 
  * @function formDeck
  * @return {*} - form the deck and cards on stage
  */
 const formDeck = () => {
+  let deck = cardsInDeck;
 
-  greenCardsInFirstStage = arrSlice(getObjects(cardsInDeck, 'color', 'green'), ancient.firstStage.greenCards);
-  brownCardsInFirstStage = arrSlice(getObjects(cardsInDeck, 'color', 'brown'), ancient.firstStage.brownCards);
-  blueCardsInFirstStage = arrSlice(getObjects(cardsInDeck, 'color', 'blue'), ancient.firstStage.blueCards);
+  greenCardsInFirstStage = getFromArr(getObjects(deck, 'color', 'green'), ancient.firstStage.greenCards);
+  delFromArr(deck, greenCardsInFirstStage)
 
-  greenCardsInSecondStage = arrSlice(getObjects(cardsInDeck, 'color', 'green'), ancient.secondStage.greenCards);
-  brownCardsInSecondStage = arrSlice(getObjects(cardsInDeck, 'color', 'brown'), ancient.secondStage.brownCards);
-  blueCardsInSecondStage = arrSlice(getObjects(cardsInDeck, 'color', 'blue'), ancient.secondStage.blueCards);
+  greenCardsInSecondStage = getFromArr(getObjects(deck, 'color', 'green'), ancient.secondStage.greenCards);
+  delFromArr(deck, greenCardsInSecondStage)
 
-  greenCardsInThirdStage = arrSlice(getObjects(cardsInDeck, 'color', 'green'), ancient.thirdStage.greenCards);
-  brownCardsInThirdStage = arrSlice(getObjects(cardsInDeck, 'color', 'brown'), ancient.thirdStage.brownCards);
-  blueCardsInThirdStage = arrSlice(getObjects(cardsInDeck, 'color', 'blue'), ancient.thirdStage.blueCards);
+  greenCardsInThirdStage = getFromArr(getObjects(deck, 'color', 'green'), ancient.thirdStage.greenCards);
+  delFromArr(deck, greenCardsInThirdStage)
+
+  brownCardsInFirstStage = getFromArr(getObjects(deck, 'color', 'brown'), ancient.firstStage.brownCards);
+  delFromArr(deck, brownCardsInFirstStage)
+
+  brownCardsInSecondStage = getFromArr(getObjects(deck, 'color', 'brown'), ancient.secondStage.brownCards);
+  delFromArr(deck, brownCardsInSecondStage)
+
+  brownCardsInThirdStage = getFromArr(getObjects(deck, 'color', 'brown'), ancient.thirdStage.brownCards);
+  delFromArr(deck, brownCardsInThirdStage)
+
+  blueCardsInFirstStage = getFromArr(getObjects(deck, 'color', 'blue'), ancient.firstStage.blueCards);
+  delFromArr(deck, blueCardsInFirstStage)
+
+  blueCardsInSecondStage = getFromArr(getObjects(deck, 'color', 'blue'), ancient.secondStage.blueCards);
+  delFromArr(deck, blueCardsInSecondStage)
+
+  blueCardsInThirdStage = getFromArr(getObjects(deck, 'color', 'blue'), ancient.thirdStage.blueCards);
+  delFromArr(deck, blueCardsInThirdStage)
 
   putCardsInArr(greenCardsInFirstStage, allCardsInFirstStage);
   putCardsInArr(greenCardsInSecondStage, allCardsInSecondStage);
@@ -470,9 +510,9 @@ const changeCard = () => {
 
   if (allCardsInFirstStage.length > 0) {
 
-    removed = arrSlice(allCardsInFirstStage, 1)[0];
+    removed = getFromArr(allCardsInFirstStage, 1)[0];
 
-    allCardsInFirstStage = getObjects(allCardsInFirstStage, 'id', removed.id, 'remove')
+    allCardsInFirstStage = getObjects(allCardsInFirstStage, 'id', removed.id, 'exclude')
     deckImg.setAttribute('src', removed.cardFace);
 
     if ((removed.id).includes('green')) {
@@ -487,9 +527,9 @@ const changeCard = () => {
 
   } else if (allCardsInSecondStage.length > 0) {
 
-    removed = arrSlice(allCardsInSecondStage, 1)[0];
+    removed = getFromArr(allCardsInSecondStage, 1)[0];
 
-    allCardsInSecondStage = getObjects(allCardsInSecondStage, 'id', removed.id, 'remove')
+    allCardsInSecondStage = getObjects(allCardsInSecondStage, 'id', removed.id, 'exclude')
     deckImg.setAttribute('src', removed.cardFace);
 
     if ((removed.id).includes('green')) {
@@ -504,9 +544,9 @@ const changeCard = () => {
 
   } else if (allCardsInThirdStage.length > 0) {
 
-    removed = arrSlice(allCardsInThirdStage, 1)[0];
+    removed = getFromArr(allCardsInThirdStage, 1)[0];
 
-    allCardsInThirdStage = getObjects(allCardsInThirdStage, 'id', removed.id, 'remove')
+    allCardsInThirdStage = getObjects(allCardsInThirdStage, 'id', removed.id, 'exclude')
     deckImg.setAttribute('src', removed.cardFace);
 
     if ((removed.id).includes('green')) {
