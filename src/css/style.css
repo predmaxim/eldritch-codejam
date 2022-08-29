@@ -269,5 +269,5 @@ section {
 
 .light {
   /* background: rgb(250 207 66 / 28%); */
-  box-shadow: 0 0 38px 0px rgb(250 207 66);
+  box-shadow: 0px 5px 50px -5px rgb(250, 66, 66);
 }
