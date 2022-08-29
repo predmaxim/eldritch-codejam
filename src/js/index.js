@@ -27,7 +27,6 @@ document.addEventListener('click', (e) => {
     rollDown();
     putDeck();
     newGame(e.target);
-    // setTimeout(() => info2.classList.remove('dispnone'), 1000)
   }
 
   // deck-img

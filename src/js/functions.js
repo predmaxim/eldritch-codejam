@@ -1,5 +1,5 @@
 import AncientsData from "../data/ancients";
-import Difficulties from "../data/difficulties";
+// import Difficulties from "../data/difficulties";
 import { brownCards, blueCards, greenCards } from "../data/mythicCards/index";
 export {
   rollDown,
@@ -187,9 +187,6 @@ const getFromArr = (arr, num) => {
   })
 };
 
-// const getFromArr = (arr, num) => {
-//   return arr.splice(0, num)
-// };
 
 /** 
  * @function putCardsInArr
@@ -202,7 +199,7 @@ const putCardsInArr = (arr, StoreArr) => arr.forEach((e) => StoreArr.push(e));
 /** 
  * @function getCardsWithDiff
  * @param {string} dif - difficulty string
- * @return {*} - set cards by color with given difficulty
+ * @return {*} - get cards by color with given difficulty
  */
 const getCardsWithDiff = (dif) => {
   greenCardsWithDifficulty = getObjects(greenCards, 'difficulty', dif); // массив объектов - все выбранные зеленые карты с определенной сложностью
@@ -302,15 +299,17 @@ const checkCards = () => {
 }
 
 /** 
- * @function cachImgs
+ * @function cacheImgs
  * @return {*} - cach imgs in deck
  */
-const cachImgs = () => {
+const cacheImgs = () => {
   const cardsImg = [];
 
   allCards.forEach((obj) => {
     for (const key in obj) {
-      if (key == 'cardFace') cardsImg.push(obj[key]);
+      if (key == 'cardFace') {
+        // console.log(obj.id)        
+        cardsImg.push(obj[key])};
     }
   })
 
@@ -341,34 +340,33 @@ const delFromArr = (arrFrom, arrTo) => {
  * @return {*} - form the deck and cards on stage
  */
 const formDeck = () => {
-  let deck = cardsInDeck;
 
-  greenCardsInFirstStage = getFromArr(getObjects(deck, 'color', 'green'), ancient.firstStage.greenCards);
-  delFromArr(deck, greenCardsInFirstStage)
+  greenCardsInFirstStage = getFromArr(getObjects(cardsInDeck, 'color', 'green'), ancient.firstStage.greenCards);
+  delFromArr(cardsInDeck, greenCardsInFirstStage)
 
-  greenCardsInSecondStage = getFromArr(getObjects(deck, 'color', 'green'), ancient.secondStage.greenCards);
-  delFromArr(deck, greenCardsInSecondStage)
+  greenCardsInSecondStage = getFromArr(getObjects(cardsInDeck, 'color', 'green'), ancient.secondStage.greenCards);
+  delFromArr(cardsInDeck, greenCardsInSecondStage)
 
-  greenCardsInThirdStage = getFromArr(getObjects(deck, 'color', 'green'), ancient.thirdStage.greenCards);
-  delFromArr(deck, greenCardsInThirdStage)
+  greenCardsInThirdStage = getFromArr(getObjects(cardsInDeck, 'color', 'green'), ancient.thirdStage.greenCards);
+  delFromArr(cardsInDeck, greenCardsInThirdStage)
 
-  brownCardsInFirstStage = getFromArr(getObjects(deck, 'color', 'brown'), ancient.firstStage.brownCards);
-  delFromArr(deck, brownCardsInFirstStage)
+  brownCardsInFirstStage = getFromArr(getObjects(cardsInDeck, 'color', 'brown'), ancient.firstStage.brownCards);
+  delFromArr(cardsInDeck, brownCardsInFirstStage)
 
-  brownCardsInSecondStage = getFromArr(getObjects(deck, 'color', 'brown'), ancient.secondStage.brownCards);
-  delFromArr(deck, brownCardsInSecondStage)
+  brownCardsInSecondStage = getFromArr(getObjects(cardsInDeck, 'color', 'brown'), ancient.secondStage.brownCards);
+  delFromArr(cardsInDeck, brownCardsInSecondStage)
 
-  brownCardsInThirdStage = getFromArr(getObjects(deck, 'color', 'brown'), ancient.thirdStage.brownCards);
-  delFromArr(deck, brownCardsInThirdStage)
+  brownCardsInThirdStage = getFromArr(getObjects(cardsInDeck, 'color', 'brown'), ancient.thirdStage.brownCards);
+  delFromArr(cardsInDeck, brownCardsInThirdStage)
 
-  blueCardsInFirstStage = getFromArr(getObjects(deck, 'color', 'blue'), ancient.firstStage.blueCards);
-  delFromArr(deck, blueCardsInFirstStage)
+  blueCardsInFirstStage = getFromArr(getObjects(cardsInDeck, 'color', 'blue'), ancient.firstStage.blueCards);
+  delFromArr(cardsInDeck, blueCardsInFirstStage)
 
-  blueCardsInSecondStage = getFromArr(getObjects(deck, 'color', 'blue'), ancient.secondStage.blueCards);
-  delFromArr(deck, blueCardsInSecondStage)
+  blueCardsInSecondStage = getFromArr(getObjects(cardsInDeck, 'color', 'blue'), ancient.secondStage.blueCards);
+  delFromArr(cardsInDeck, blueCardsInSecondStage)
 
-  blueCardsInThirdStage = getFromArr(getObjects(deck, 'color', 'blue'), ancient.thirdStage.blueCards);
-  delFromArr(deck, blueCardsInThirdStage)
+  blueCardsInThirdStage = getFromArr(getObjects(cardsInDeck, 'color', 'blue'), ancient.thirdStage.blueCards);
+  delFromArr(cardsInDeck, blueCardsInThirdStage)
 
   putCardsInArr(greenCardsInFirstStage, allCardsInFirstStage);
   putCardsInArr(greenCardsInSecondStage, allCardsInSecondStage);
@@ -385,7 +383,9 @@ const formDeck = () => {
   putCardsInArr(allCardsInFirstStage, allCards);
   putCardsInArr(allCardsInSecondStage, allCards);
   putCardsInArr(allCardsInThirdStage, allCards);
-  cachImgs();
+
+  // console.log(allCards)
+  cacheImgs();
 
 }
 
@@ -413,19 +413,16 @@ const newGame = (target) => {
       ancient.firstStage.greenCards +
       ancient.firstStage.brownCards +
       ancient.firstStage.blueCards;
-
     // кол-во карт второй стадии
     secondStageAllCardsInDeckAmount =
       ancient.secondStage.greenCards +
       ancient.secondStage.brownCards +
       ancient.secondStage.blueCards;
-
     // кол-во карт третьей стадии
     thirdStageAllCardsInDeckAmount =
       ancient.thirdStage.greenCards +
       ancient.thirdStage.brownCards +
       ancient.thirdStage.blueCards;
-
 
     // кол-во зеленых карт
     allStageGreenCardsToNeedAmount =
@@ -437,7 +434,6 @@ const newGame = (target) => {
       ancient.firstStage.brownCards +
       ancient.secondStage.brownCards +
       ancient.thirdStage.brownCards;
-
     // кол-во голубых карт
     allStageBlueCardsToNeedAmount =
       ancient.firstStage.blueCards +
@@ -506,57 +502,55 @@ const changeCard = () => {
 
   if (allCardsInFirstStage.length > 0) {
 
-    removed = getFromArr(allCardsInFirstStage, 1)[0];
+    removed = getFromArr(allCardsInFirstStage, 1);
 
-    allCardsInFirstStage = getObjects(allCardsInFirstStage, 'id', removed.id, 'exclude')
-    deckImg.setAttribute('src', removed.cardFace);
+    delFromArr(allCardsInFirstStage, removed)
+    deckImg.setAttribute('src', removed[0].cardFace);
 
-    if ((removed.id).includes('green')) {
+    if ((removed[0].id).includes('green')) {
       firstStageGreenCard.innerText = firstStageGreenCard.innerText - 1 || 0;
     }
-    if ((removed.id).includes('brown')) {
+    if ((removed[0].id).includes('brown')) {
       firstStageBrownCard.innerText = firstStageBrownCard.innerText - 1 || 0;
     }
-    if ((removed.id).includes('blue')) {
+    if ((removed[0].id).includes('blue')) {
       firstStageBlueCard.innerText = firstStageBlueCard.innerText - 1 || 0;
     }
 
   } else if (allCardsInSecondStage.length > 0) {
 
-    removed = getFromArr(allCardsInSecondStage, 1)[0];
+    removed = getFromArr(allCardsInSecondStage, 1);
 
-    allCardsInSecondStage = getObjects(allCardsInSecondStage, 'id', removed.id, 'exclude')
-    deckImg.setAttribute('src', removed.cardFace);
+    delFromArr(allCardsInSecondStage, removed)
+    deckImg.setAttribute('src', removed[0].cardFace);
 
-    if ((removed.id).includes('green')) {
+    if ((removed[0].id).includes('green')) {
       secondStageGreenCard.innerText = secondStageGreenCard.innerText - 1 || 0;
     }
-    if ((removed.id).includes('brown')) {
+    if ((removed[0].id).includes('brown')) {
       secondStageBrownCard.innerText = secondStageBrownCard.innerText - 1 || 0;
     }
-    if ((removed.id).includes('blue')) {
+    if ((removed[0].id).includes('blue')) {
       secondStageBlueCard.innerText = secondStageBlueCard.innerText - 1 || 0;
     }
-
   } else if (allCardsInThirdStage.length > 0) {
 
-    removed = getFromArr(allCardsInThirdStage, 1)[0];
+    removed = getFromArr(allCardsInThirdStage, 1);
 
-    allCardsInThirdStage = getObjects(allCardsInThirdStage, 'id', removed.id, 'exclude')
-    deckImg.setAttribute('src', removed.cardFace);
+    delFromArr(allCardsInThirdStage, removed)
+    deckImg.setAttribute('src', removed[0].cardFace);
 
-    if ((removed.id).includes('green')) {
+    if ((removed[0].id).includes('green')) {
       thirdStageGreenCard.innerText = thirdStageGreenCard.innerText - 1 || 0;
     }
 
-    if ((removed.id).includes('brown')) {
+    if ((removed[0].id).includes('brown')) {
       thirdStageBrownCard.innerText = thirdStageBrownCard.innerText - 1 || 0;
     }
 
-    if ((removed.id).includes('blue')) {
+    if ((removed[0].id).includes('blue')) {
       thirdStageBlueCard.innerText = thirdStageBlueCard.innerText - 1 || 0;
     }
-
   }
 
   if (allCardsInFirstStage.length == 0) stageComplete(fs);
