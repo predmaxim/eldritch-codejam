@@ -499,10 +499,10 @@ const putDeck = () => {
  * @function light
  * @return {*} - highlights the element
  * */
-const light = (el) => {
-  el.classList.add('light');
-  setTimeout(() => { el.classList.remove('light'); }, 200)
-}
+// const light = (el) => {
+//   el.classList.add('light');
+//   setTimeout(() => { el.classList.remove('light'); }, 200)
+// }
 
 /** 
  * @function changeCard
